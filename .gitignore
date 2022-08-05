@@ -1,3 +1,4 @@
 packer/*.pem
+terraform.tfstate*
 terraform/.terraform
 terraform/.terraform*
