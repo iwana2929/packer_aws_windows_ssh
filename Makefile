@@ -1,4 +1,4 @@
-.PHONY: ami ec2 clean
+.PHONY: ami ec2 test-ssh clean 
 
 ADMIN_KEY = ./packer/ssh_private_key_win_admin_rsa.pem
 USER_KEY = ./packer/ssh_private_key_win_normal_rsa.pem
