@@ -1,0 +1,3 @@
+packer/*.pem
+terraform/.terraform
+terraform/.terraform*
