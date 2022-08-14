@@ -1,34 +1,42 @@
-.PHONY: ami ec2 test-ssh clean 
+.PHONY: ami ec2 clean all env-check
+include .env
 
-ADMIN_KEY = ./packer/ssh_private_key_win_admin_rsa.pem
-USER_KEY = ./packer/ssh_private_key_win_normal_rsa.pem
-TMP_ADMIN_KEY = /tmp/ssh_private_key_win_admin_rsa.pem
-TMP_USER_KEY = /tmp/ssh_private_key_win_normal_rsa.pem
+PWD = $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
+ADMIN_KEY = ${PWD}/packer/ssh_private_key_win_admin_rsa.pem
+USER_KEY = ${PWD}/packer/ssh_private_key_win_normal_rsa.pem
+WAIT_SECONDS = 120
 
-ami:
-	@read -p "Enter vpc_subnet_id:" SUBNET_ID;\
+ami: env-check
+	@read -p "Enter admin_password:" ADMIN_PASSWORD;\
 	cd packer;\
 	export PACKER_CACHE_DIR=".";\
+	export SUBNET_ID=${SUBNET_ID};\
+	export ADMIN_PASSWORD=$${ADMIN_PASSWORD};\
 	packer init .;\
-	packer build  -var "vpc_subnet_id=$$SUBNET_ID" . 
+	packer build .
 
-ec2:
+ec2: env-check
+	export TF_VAR_aws_vpc_id=${VPC_ID};\
+	export TF_VAR_vpc_subnet_id=${SUBNET_ID};\
+	export TF_VAR_ssh_private_key_path=${ADMIN_KEY};\
 	cd terraform;\
 	terraform init;\
 	terraform apply;
 
-test-ssh:
-	cd terraform;\
-	IP=`terraform output -raw public_ip`;\
-	cd ..;\
-	cp $(ADMIN_KEY) $(TMP_ADMIN_KEY) && chmod 400 $(TMP_ADMIN_KEY);\
-	cp $(USER_KEY) $(TMP_USER_KEY) && chmod 400 $(TMP_USER_KEY);\
-	ssh -i $(TMP_ADMIN_KEY) Administrator@$$IP echo "connected using ssh Administrator";\
-	ssh -i $(TMP_USER_KEY) user_a@$$IP echo "connected using ssh Normal user";\
-	rm -f $(TMP_ADMIN_KEY) $(TMP_USER_KEY);
-
-clean:
+clean: env-check
+	export TF_VAR_aws_vpc_id=${VPC_ID};\
+	export TF_VAR_vpc_subnet_id=${SUBNET_ID};\
+	export TF_VAR_ssh_private_key_path=${ADMIN_KEY};\
 	cd terraform;\
 	terraform destroy;\
-	rm -f $(TMP_ADMIN_KEY) $(TMP_USER_KEY);\
-	rm -f $(ADMIN_KEY) $(USER_KEY);\
+
+all: ami ec2 clean
+
+env-check:
+ifndef VPC_ID
+	$(error VPC_ID must be specified)
+endif
+ifndef SUBNET_ID
+	$(error SUBNET_ID must be specified)
+endif
+

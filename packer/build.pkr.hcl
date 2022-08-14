@@ -1,7 +1,8 @@
 packer {
+  required_version = ">= 1.7.3"
   required_plugins {
     amazon = {
-      version = ">= 0.0.1"
+      version = ">= 1.0.0"
       source  = "github.com/hashicorp/amazon"
     }
 
@@ -28,7 +29,8 @@ variable "instance_type" {
 }
 
 variable "vpc_subnet_id" {
-  type = string
+  type    = string
+  default = env("SUBNET_ID")
   validation {
     condition     = 7 < length(var.vpc_subnet_id) && substr(var.vpc_subnet_id, 0, 7) == "subnet-"
     error_message = <<EOF
@@ -64,11 +66,11 @@ variable "normal_user_account" {
 
 variable "admin_password" {
   type    = string
-  default = env("PACKER_VAR_admin_password")
+  default = env("ADMIN_PASSWORD")
   validation {
     condition     = 0 < length(var.admin_password)
     error_message = <<EOF
-    Variable admin_password must be specified as env:PACKER_VAR_admin_password.
+    Variable admin_password must be specified as env:ADMIN_PASSWORD.
 EOF
   }
 }
