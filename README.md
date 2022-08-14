@@ -104,7 +104,7 @@ This configuration is combined with [Makefile](#Helper-Makefile) targets.
 ## Resources
 | Name | Description | 
 |------|-------------|
-| [aws_security_group.windows_ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | |
+| [aws_security_group.windows_ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | the security group will attach to the instance, open SSH(22) inbound traffic from 0.0.0.0/0 and no outbound traffic limitations |
 | [aws_key_pair.instance_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | will be registered as an instance's SSH key pair see [Input Variables also](#ssh-private-key-path)|
 | [null_resource.check_ssh_connectivity_admin](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | to check SSH connectivity for Administrator, triggered  by changing instance_id, if "var.with_ssh_check" is false then it'll be ignored. |
 | [null_resource.check_ssh_connectivity_normal](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | to check SSH connectivity for Normal user, triggered  by changing instance_id, if "var.with_ssh_check" is false then it'll be ignored. |
