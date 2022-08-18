@@ -93,7 +93,7 @@ This configuration is combined with [Makefile](#Helper-Makefile) targets.
 ## Modules
 | Name | Version |
 |------|---------|
-| [module.ec2_instance]((https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest)) | ~> 3.0 |
+| [module.ec2_instance](https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest) | ~> 3.0 |
 
 ## Data
 | Name | Description | 
